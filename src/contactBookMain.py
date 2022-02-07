@@ -1,28 +1,34 @@
-from tkinter import *
 import sqlite3
 
 conn = sqlite3.connect('users.db')
 
-window = Tk()
 c = conn.cursor()
-#c.execute("""CREATE TABLE users (
-#      UserId int PRIMARY KEY,
-#      FirstName text,
-#      LastName text,
-#      Adres text,
-#      PhoneNumber varchar(12),
-#      EmailAdress text
-#   )""")
 
-#c.execute("INSERT INTO Users (FirstName, LastName, Adres, PhoneNumber, EmailAdress) VALUES ('Adam', 'Pawlak', 'Moon', 123123123, 'kox123@essa.pl')");
+#def readSQLFile(filePath):
+#	dbCreate = open(filePath, 'r')
+#	sqlFile = dbCreate.read()
+#	dbCreate.close()
+#
+#	sqlCommands = sqlFile.split(';')
+#
+#	for command in sqlCommands:
+#	    try:
+#	        c.execute(command)
+#	    except(OperationalError, msg):
+#	        print("Command skipped: ", msg)
 
-c.execute("SELECT * FROM users")
-firstUser = c.fetchone()
-label = Label(window, text = firstUser)
-label.pack()
-#print(c.fetchone())
+def printSQL(task):
+	c.execute(task)
+	#print(c.fetchall())
+	return(c.fetchall())
 
-window.mainloop()
-#conn.execute("SELECT * from Users;")
+#readSQLFile('db/createUsersTable.sql')
+#c.execute("DROP TABLE users")
+#c.execute("CREATE TABLE users (UserId INTEGER PRIMARY KEY AUTOINCREMENT, FirstName text, LastName text, Adres text, PhoneNumber varchar(12), EmailAdress text);")
+#c.execute("INSERT INTO Users (FirstName, LastName, Adres, PhoneNumber, EmailAdress) VALUES ('Adam', 'Pawlak', 'Moon', 123123123, 'kox123@essa.pl');")
+#c.execute("DELETE FROM users WHERE FirstName = 'Adam';")
+columnNamesList = printSQL("PRAGMA table_info(users);")
+usersList = printSQL("SELECT * FROM users")
+
 conn.commit()
 conn.close()
